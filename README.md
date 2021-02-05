@@ -6,7 +6,7 @@ One file for downloading of multiple files in Unity
 - Download any amount of files one at a time, using single-threaded execution.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
-> By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to pause and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler(https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
+> By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to pause and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
 - Properties for timeouts, internal timers and keeps track of pending, completed and uncomplete URIs.
 - Additional [component](https://docs.unity3d.com/ScriptReference/MonoBehaviour.html) for controling the downloader through the editor.
 
@@ -17,6 +17,12 @@ One file for downloading of multiple files in Unity
          // in some .cs file, maybe or maybe not using MonoBehavior
          public void DownloadFiles1() {
                   GroupDownloader downloader = new GroupDownloader();
+                  
+                  /* Make sure to set MonoPuppet to some MonoBehavior in order for
+                     the IEnumerator to work.
+                     This can be any script that uses MonoBehavior.
+                  */
+                  downloader.MonoPuppet = gameObject.GetComponents(typeof MonoBehavior)[0]; // using any MonoBehavior on an example GameObject
                   
                   /* Add some URLS to download here. */
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
@@ -47,6 +53,12 @@ One file for downloading of multiple files in Unity
          
          public void DownloadFiles2() {
                   GroupDownloader downloader = new GroupDownloader();
+                  
+                  /* Make sure to set MonoPuppet to some MonoBehavior in order for
+                     the IEnumerator to work.
+                     This can be any script.
+                  */
+                  downloader.MonoPuppet = gameObject.GetComponents(typeof MonoBehavior)[0]; // using any MonoBehavior on an example GameObject
                   
                   /* Add some URLS to download here. */
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
@@ -125,6 +137,8 @@ One file for downloading of multiple files in Unity
                   Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
         }
 ```
+
+
 
 
 ## What technologies/frameworks are involved?
