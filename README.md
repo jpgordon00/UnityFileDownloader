@@ -2,7 +2,8 @@
 One file for downloading of multiple files in Unity
 
 ## Wha does it do?
-- One C# (.cs) file dependent on only Unity and C#. 
+- One C# (.cs) file.
+> The file is dependent only on Unity and C#.
 - Download any amount of files one at a time, using single-threaded execution.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
@@ -150,7 +151,7 @@ A picture of this in the editor will be included.
 - Unity as the cross-platform game engine
 - [UnityWebRequests](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html) for fullfiling downloads
 
-# Future improvement
+# Future improvements.
 - More complete and visible testing for this product is a must. While it was tested extensively, clear testing should be provided.
 - Easier configuration via chained constructor-like functions. A special object used for constructing GroupDownloader's will have public methods that all returned a shared object. This allows the programmer to create objects through specifying only the functions they need in place of properties in constructors. Below is a basic example of using this programming structure:
 ```MyObjectCreator.Create(); // creates an MyObject without any params --> new MyObject()
