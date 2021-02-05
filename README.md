@@ -12,6 +12,10 @@ One file for downloading of multiple files in Unity
 
 ## How do I use it?
 - Place GroupDownloader.cs in your Scripts folder, or any folder that Unity reads scripts from.
+- Add GroupDownloaderComponent to any GameObject.
+> Set the following properties in the inspector: DownloadPath, PendingURIS, URIToFilenameMap
+A picture of this in the editor will be included.
+
 - An example of using GroupDowloader in code:
 ```javascript
          // in some .cs file, maybe or maybe not using MonoBehavior
