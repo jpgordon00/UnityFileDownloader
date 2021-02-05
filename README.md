@@ -47,7 +47,7 @@ A picture of this in the editor will be included.
                      The default value of this property is false
                   */
                   downloader.AbandonOnFailure = false;
-                  
+
                   /* Add our events as listeners. Can register multiple. */
                   downloader.OnDownloadFailure += OnUpdateFailure;
                   downloader.OnDownloadSuccess += OnUpdateSuccess;
@@ -55,8 +55,26 @@ A picture of this in the editor will be included.
                   /* Starts the download*/
                   downloader.Download();
          }
+ 
+         private void OnUpdateFailure(bool completed, string uri, string fileResultPath) {
+                  /* Invoked when a file fails to download
+                  Invoked multiple times when AbandonOnFailure = false
+                  */
+                  Debug.Log("Done downloading: " + completed");
+                  Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath");
+        }
          
-         public void DownloadFiles2() {
+        private void OnUpdateSuccess(bool completed, string uri, string fileResultPath) {
+                  /* Invoked when a file downloads succesfully
+                    Invoked multiple times when AbandonOnFailure = false
+                   */
+                  Debug.Log("Success! " + (completed ? "COMPLETED : "INCOMPLETE") + ");
+                  Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
+        }
+```
+
+```javascript
+public void DownloadFiles2() {
                   GroupDownloader downloader = new GroupDownloader();
                   
                   /* Make sure to set MonoPuppet to some MonoBehavior in order for
@@ -124,25 +142,7 @@ A picture of this in the editor will be included.
                   downloader.Cancel();
                   
          }
-
-
-         private void OnUpdateFailure(bool completed, string uri, string fileResultPath) {
-                  /* Invoked when a file fails to download
-                  Invoked multiple times when AbandonOnFailure = false
-                  */
-                  Debug.Log("Done downloading: " + completed");
-                  Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath");
-        }
-         
-        private void OnUpdateSuccess(bool completed, string uri, string fileResultPath) {
-                  /* Invoked when a file downloads succesfully
-                    Invoked multiple times when AbandonOnFailure = false
-                   */
-                  Debug.Log("Success! " + (completed ? "COMPLETED : "INCOMPLETE") + ");
-                  Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
-        }
 ```
-
 
 
 
