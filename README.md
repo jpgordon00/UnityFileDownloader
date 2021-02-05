@@ -13,7 +13,7 @@ One file for downloading of multiple files in Unity
 ## How do I use it?
 - Place GroupDownloader.cs in your Scripts folder, or any folder that Unity reads scripts from.
 - An example of using GroupDowloader in code:
-```
+```javascript
          // in some .cs file, maybe or maybe not using MonoBehavior
          public void DownloadFiles1() {
                   GroupDownloader downloader = new GroupDownloader();
