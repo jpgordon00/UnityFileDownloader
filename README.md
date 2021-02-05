@@ -1,19 +1,31 @@
 # UnityGroupDownloader
-Single-threaded atomic downloading of multiple files with UnityWebRequest 
+One file for downloading of multiple files in Unity
 
-## What does it do?
+## Wha does it do?
+- One C# (.cs) file dependent on only Unity and C#. 
 - Download any amount of files one at a time, using single-threaded execution.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
 > By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to pause and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
 - Properties for timeouts, internal timers and keeps track of pending, completed and uncomplete URIs.
+- Additional [component](https://docs.unity3d.com/ScriptReference/MonoBehaviour.html) for controling the downloader through the editor.
 
 ## How do I use it?
+- Place GroupDownloader.cs in your Scripts folder, or any folder that Unity reads scripts from.
+- An example of using GroupDowloader in code:
+'''
+         private void OnUpdateFailure(bool completed, string uri, string fileResultPath) {
+        }
+
+        private void OnUpdateSuccess(bool completed, string uri, string fileResultPath) {
+        }
+'''
+
 
 ## What technologies/frameworks are involved?
 - C# for the scripting language for Unity
 - Unity as the cross-platform game engine
-- UnityWebRequests for fullfiling downloads
+- [UnityWebRequests](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html) for fullfiling downloads
 
 # Future improvement
 - More complete and visible testing for this product is a must. While it was tested extensively, clear testing should be provided.
