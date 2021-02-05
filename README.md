@@ -1,5 +1,5 @@
 # UnityGroupDownloader
-One file for downloading of multiple files in Unity
+One class for easily downloading multiple files at a time.
 
 ## Wha does it do?
 - One C# (.cs) file.
