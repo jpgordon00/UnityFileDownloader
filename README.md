@@ -8,6 +8,7 @@ One class for easily downloading multiple files at a time.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
 > By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to pause and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
+- Progress calculation
 - Properties for timeouts, internal timers and keeps track of pending, completed and uncomplete URIs.
 - Additional [component](https://docs.unity3d.com/ScriptReference/MonoBehaviour.html) for controling the downloader through the editor.
 
@@ -158,6 +159,8 @@ public void DownloadFiles2() {
    MyObjectCreator.Create().SetInt(1); // creates a MyObject with 1 set as some property
    MyObjectCreate.Create().SetInt(1).SomeProperty().YouGetIt();
 ```
+- More accurate progress calculation. Currently, progress is calculated linearily with each succesful file increasing the progress by a porportional amount.
+> Each file should increase the progress by a weighted percentage instead. If file progress is calculated by file size instead of number of files, progress would be more near the actual amount.
 - Use of multi-threaded file downloading.
 - Remove dependence on MonoBehavior by replacing IEnumerator's with [async and await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).
 - Allow use of different fullfillers of downloaders, for example [WebClient](https://www.c-sharpcorner.com/blogs/consume-webapi-using-webclient-in-c-sharp).
