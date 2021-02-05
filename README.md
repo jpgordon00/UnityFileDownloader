@@ -2,7 +2,7 @@
 One class for easily downloading multiple files at a time.
 
 ## Wha does it do?
-- One C# (.cs) file.
+- One C# file.
 > The file is dependent only on Unity and C#.
 - Download any amount of files one at a time, using single-threaded execution.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
