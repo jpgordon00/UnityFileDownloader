@@ -14,5 +14,14 @@ Single-threaded atomic downloading of multiple files with UnityWebRequest
 
 # Future improvement
 > 
+- Easier configuration via chained constructor-like functions. A special object used for constructing GroupDownloader's will have public methods that all returned a shared object. This allows the programmer to create objects through specifying only the functions they need in place of properties in constructors. Below is a basic example of using this programming structure:
+```MyObjectCreator.Create(); // creates an MyObject without any params --> new MyObject()
+   MyObjectCreator.Create().SetInt(1); // creates a MyObject with 1 set as some property
+   MyObjectCreate.Create().SetInt(1).SomeProperty().YouGetIt();
+```
+
 - Remove dependence on MonoBehavior by replacing IEnumerator's with [async and await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).
 - Allow use of different fullfillers of downloaders, for example [WebClient](https://www.c-sharpcorner.com/blogs/consume-webapi-using-webclient-in-c-sharp).
+
+
+## What I learned.
