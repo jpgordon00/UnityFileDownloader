@@ -129,12 +129,6 @@ public void DownloadFiles2() {
                   */
                   downloader.AbandonOnFailure = true;
                   
-                  /* Add our events as listeners. Can register multiple. */
-                  downloader.OnDownloadFailure += OnUpdateFailure;
-                  downloader.OnDownloadSuccess += OnUpdateSuccess;
-                  
-                  
-                  
                   /* Starts the download*/
                   downloader.Download();
                   
