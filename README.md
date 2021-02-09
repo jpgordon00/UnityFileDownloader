@@ -14,11 +14,11 @@ One class for easily downloading multiple files at a time.
 
 ## How do I use it?
 - Place GroupDownloader.cs in your Scripts folder, or any folder that Unity reads scripts from.
-- Add GroupDownloaderComponent to any GameObject.
+- Below is an example of using GroupDownloaderComponent by placing it on any GameObject
 > Set the following properties in the inspector: DownloadPath, PendingURIS, URIToFilenameMap
 A picture of this in the editor will be included.
 
-- An example of using GroupDowloader in code:
+- Below is an example of using GroupDowloader in code:
 ```javascript
          // in some .cs file, maybe or maybe not using MonoBehavior
          public void DownloadFiles1() {
@@ -73,10 +73,28 @@ A picture of this in the editor will be included.
                   Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
         }
 ```
-
+- Below is another example:
 ```javascript
 public void DownloadFiles2() {
                   GroupDownloader downloader = new GroupDownloader();
+                  
+                  /* Setup Success callback inline*/
+                  downloader.OnDownloadSuccess += (bool completed, string uri, string fileResultPath) => {
+                           /* Invoked when a file downloads succesfully
+                           Invoked multiple times when AbandonOnFailure = false
+                           */
+                           Debug.Log("Success! " + (completed ? "COMPLETED : "INCOMPLETE") + ");
+                           Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
+                  }
+                  
+                  /* Do the same for an error callback inline */
+                  downloader.OnDownloadFail += (bool completed, string uri, string fileResultPath) => {
+                           /* Invoked when a file fails to download
+                           Invoked multiple times when AbandonOnFailure = false
+                           */
+                           Debug.Log("Done downloading: " + completed");
+                           Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath");
+                  }
                   
                   /* Make sure to set MonoPuppet to some MonoBehavior in order for
                      the IEnumerator to work.
