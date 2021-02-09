@@ -151,6 +151,11 @@ public void DownloadFiles2() {
                   */
                   int elapsed = downloader.Elapsed;
                   
+                  /* Gets the current progress as a percent float 
+                     Where 0.0 is 0% and 1.0 is %100
+                  */
+                  float prog = downloader.Progress;
+                  
                   /* Want to cancel the downloader? Easy. */
                   downloader.Cancel();
                   
