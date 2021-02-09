@@ -4,6 +4,7 @@ One class for easily downloading multiple files at a time using [UnityWebRequest
 ## What does it do?
 - Download any amount of files one-after-anothother.
 > This is considered single-threaded execution because each file waits for the next to finish until downloading. It is unclear if UnityWebRequest is threaded.
+- Uses async and await to avoid coroutines. You don't need to use it in a MonoBehavior!
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
 > By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to cancel and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
@@ -29,11 +30,6 @@ One class for easily downloading multiple files at a time using [UnityWebRequest
          public void DownloadFiles1() {
                   GroupDownloader downloader = new GroupDownloader();
                   
-                  /* Make sure to set MonoPuppet to some MonoBehavior in order for
-                     the IEnumerator to work.
-                     This can be any script that uses MonoBehavior.
-                  */
-                  downloader.MonoPuppet = this;
                   
                   /* Add some URLS to download here. */
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
@@ -100,13 +96,7 @@ public void DownloadFiles2() {
                            Debug.Log("Done downloading: " + completed");
                            Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath");
                   }
-                  
-                  /* Make sure to set MonoPuppet to some MonoBehavior in order for
-                     the IEnumerator to work.
-                     This can be any script.
-                  */
-                  downloader.MonoPuppet = this; // using any MonoBehavior on an example GameObject
-                  
+                
                   /* Add some URLS to download here. */
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
                   
