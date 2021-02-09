@@ -7,7 +7,7 @@ One class for easily downloading multiple files at a time.
 - Download any amount of files one at a time, using single-threaded execution.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
-> By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to pause and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
+> By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to cancel and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
 - Progress calculation.
 > Access the current progress of the downloader as a float 0f to 1f.
 - Properties to change timeouts, access elapsed and total time, and more.
