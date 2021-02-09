@@ -5,8 +5,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace BeastBear {
-
     // downloads multiple files to a path ( one-after-another execution )
     // events for download failure and success
     // all pending URI's should be pre-checked for syntax
@@ -319,5 +317,3 @@ namespace BeastBear {
         }
 
     }
-
-}
