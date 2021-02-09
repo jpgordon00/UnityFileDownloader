@@ -32,7 +32,7 @@ One class for easily downloading multiple files at a time.
                      the IEnumerator to work.
                      This can be any script that uses MonoBehavior.
                   */
-                  downloader.MonoPuppet = gameObject.GetComponents(typeof MonoBehavior)[0]; // using any MonoBehavior on an example GameObject
+                  downloader.MonoPuppet = this;
                   
                   /* Add some URLS to download here. */
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
@@ -104,7 +104,7 @@ public void DownloadFiles2() {
                      the IEnumerator to work.
                      This can be any script.
                   */
-                  downloader.MonoPuppet = gameObject.GetComponents(typeof MonoBehavior)[0]; // using any MonoBehavior on an example GameObject
+                  downloader.MonoPuppet = this; // using any MonoBehavior on an example GameObject
                   
                   /* Add some URLS to download here. */
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
