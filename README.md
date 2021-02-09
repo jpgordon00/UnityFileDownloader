@@ -180,7 +180,7 @@ public void DownloadFiles2() {
 > Currently, progress is calculated linearily with each succesful file increasing the progress by a porportional amount.
 > Each file should increase the progress by a weighted percentage instead. If file progress is calculated by file size instead of number of files, progress would be more near the actual amount.
 - Use of multi-threaded file downloading.
-- Remove dependence on MonoBehavior by replacing IEnumerator's with [async and await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).
+- ~~Remove dependence on MonoBehavior by replacing IEnumerator's with [async and await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).~~
 - Allow use of different fullfillers of downloaders, for example [WebClient](https://www.c-sharpcorner.com/blogs/consume-webapi-using-webclient-in-c-sharp).
 
 
