@@ -17,7 +17,9 @@ One class for easily downloading multiple files at a time using [UnityWebRequest
 ## How do I use it?
 - Place GroupDownloader.cs in your Scripts folder, or any folder that Unity reads scripts from.
 - Below is an example of using GroupDownloaderComponent by placing it on any GameObject
-> Set the following properties in the inspector: DownloadPath, PendingURIS, URIToFilenameMap. The DataPath does not need to be set.
+> Set the properties in the inspector: PendingURIS, UriFilename.
+
+> You do NOT need to set Download Path. It defaults to Application.persistantDataPath
 
 
 ![](https://i.gyazo.com/76904f86bacc0d49f6686ee52579e29e.png)
