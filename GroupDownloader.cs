@@ -58,7 +58,7 @@ using UnityEngine.Networking;
             }
         }
 
-        // time before timing out a specific download
+        // seconds before timing out a specific download
         public int _downloadTimeout = 7;
 
         public int DownloadTimeout {
