@@ -17,6 +17,7 @@ One class for easily downloading multiple files at a time.
 - Below is an example of using GroupDownloaderComponent by placing it on any GameObject
 > Set the following properties in the inspector: DownloadPath, PendingURIS, URIToFilenameMap
 A picture of this in the editor will be included.
+![https://i.gyazo.com/76904f86bacc0d49f6686ee52579e29e.png]
 
 - Below is an example of using GroupDowloader in code:
 ```javascript
