@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-namespace BeastBear {
+
   // mono-behavior for downloading files, just set 'PendingURLS' in editor
   // invoke 'Download' or set 'DownloadOnStart' to true
   // some fields are provided for editor-proxy access to GroupDownloader object
@@ -67,5 +67,3 @@ namespace BeastBear {
         _downloader.AbandonOnFailure = _abandonOnFailure;
     }
   }
-
-}
