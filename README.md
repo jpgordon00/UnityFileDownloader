@@ -1,5 +1,5 @@
 # UnityGroupDownloader
-One class for easily downloading multiple files at a time.
+One class for easily downloading multiple files at a time using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html).
 
 ## Wha does it do?
 - One C# file.
