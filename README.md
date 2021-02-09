@@ -110,21 +110,22 @@ public void DownloadFiles2() {
                   downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
                   
                   /* This time lets use a function to decide how each URI is named.
-                     We will specify the property 'UseURIToFilenameMap' to False and then
+                     We will specify the property 'UseURIToFilenameMap' to False
                      
                   */
-                  downloader.OnURIToFilename["www.google.com/image/someimage.jpg"] = "myimage.jpg";
+                  downloader.UseURIFilenameMap = false;
                   
                   /* All files are downloaded to the DownloadPath property
                      By defaut it is set to the persistant data path of Unity
-                     and then specify the delegate URIToFilename, which has a string param and returns a string
+                     Spicify the delegate URIToFilename, which has a string param and returns a string
                   */
+                  int i = 0;
                   downloader.URIToFilename = delegate(string uri) {
                            /* 
                            URI will be called for each URI pending to be downloaded
                            And the filename will be the return value of this statement
                            */
-                           return uri; // psudeo code
+                           return "myfile" + i++; // psudeo code
                   };
                   
                   
