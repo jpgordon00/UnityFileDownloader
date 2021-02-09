@@ -48,8 +48,8 @@ using System;
 
     // init GroupDownloader and invoke Download if enabled
     void Start() {
-      _downloadPath = Application.persistentDataPath;
       _downloader = new GroupDownloader(this, PendingURLS);
+      if (_downloadPath != null) _downloader.DownloadPath =_downloadPath;
       Dictionary<string, string> URIToFilenameMap = new Dictionary<string, string>();
       foreach (var ds in _uriToFilenames) {
         URIToFilenameMap.Add(ds.URI, ds.Filename);
