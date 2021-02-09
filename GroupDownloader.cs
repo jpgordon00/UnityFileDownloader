@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 using UnityEngine.Networking;
+
+namespace BeastBear {
 
     // downloads multiple files to a path ( one-after-another execution )
     // events for download failure and success
     // all pending URI's should be pre-checked for syntax
-    // can assign filenames via filenameToURI or filenameToUriMap 
+    // can assign filenames via filenameToURI or 
     public class GroupDownloader {
 
         // path to download each file appended by the file name ofc
@@ -21,20 +24,6 @@ using UnityEngine.Networking;
             }
             set {
               _downloadPath = value;
-            }
-        }
-
-        // puppet GO to access MonoBehavior funcs like 'StartCoroutine' ;)
-        // must not be null
-        private MonoBehaviour _monoPuppet;
-
-
-        public MonoBehaviour MonoPuppet {
-            get {
-                return _monoPuppet;
-            }
-            set {
-                _monoPuppet = value;
             }
         }
 
@@ -58,15 +47,8 @@ using UnityEngine.Networking;
             }
         }
 
-        // seconds before timing out a specific download
-        public int _downloadTimeout = 7;
-
-        public int DownloadTimeout {
-            get {
-                return _downloadTimeout;
-            }
-        }
-
+        // time before timing out a specific download
+        public int Timeout = 7;
 
         public delegate void GroupDownloadFailureEvent(bool completed, string uri, string fileResultPath);
         public delegate void GroupDownloadSuccessEvent(bool completed, string uri, string fileResultPath);
@@ -209,8 +191,7 @@ using UnityEngine.Networking;
         }
 
         // constructor to feed in pending urls
-        public GroupDownloader(MonoBehaviour monoPuppet, List < string > urls = null) {
-            this._monoPuppet = monoPuppet;
+        public GroupDownloader(List < string > urls = null) {
             if (urls != null) {
               foreach(var str in urls) PendingURLS.Add(str);
             }
@@ -218,53 +199,54 @@ using UnityEngine.Networking;
 
         // starts a group download with PendingURLS
         public bool Download() {
-            if (PendingURLS.Count == 0 || MonoPuppet == null || Downloading) return false;
+            if (PendingURLS.Count == 0 || Downloading) return false;
             _initialCount = PendingURLS.Count;
             _downloading = true;
             _startTime = DateTime.Now.Millisecond;
-            MonoPuppet.StartCoroutine(DownloadEnumerator());
+            RecursiveDownload();
             return true;
         }
 
         // recursive enumerator for downloading all valid file-containing urls in 'PendingURLS'
-        private IEnumerator DownloadEnumerator() {
+        private async void RecursiveDownload() {
             if (PendingURLS.Count == 0) { // handle no URL case
                 HandleCancel();
-                yield break;
+                return;
             }
             string uri = PendingURLS[0];
             if ((OnURIToFilename == null && !UseURIFilenameMap) || (UseURIFilenameMap && !URIFilenameMap.ContainsKey(uri))) {
                 HandleCancel();
-                yield break;
+                return;
             }
             string fileName = UseURIFilenameMap ? URIFilenameMap[uri]: OnURIToFilename(uri);
             if (fileName == null && AbandonOnFailure) {
                 HandleCancel();
-                yield break;
+                return;
             }
             var fileResultPath = Path.Combine(DownloadPath, fileName);
             PendingURLS.RemoveAt(0);
             if (!Downloading) { // case cancel invoked
                 HandleCancel(uri, fileResultPath);
-                if (AbandonOnFailure) yield break;
+                if (AbandonOnFailure) return;
             }
             var uwr = new UnityWebRequest(uri);
-            uwr.timeout = DownloadTimeout;
+            uwr.timeout = Timeout;
             uwr.method = UnityWebRequest.kHttpVerbGET;
             var dh = new DownloadHandlerFile(fileResultPath);
             dh.removeFileOnAbort = true;
             uwr.downloadHandler = dh;
-            yield return uwr.Send();
+            var operation = uwr.SendWebRequest();
+            while (!operation.isDone) await Task.Delay(100);
             if (uwr.isNetworkError || uwr.isHttpError || !Downloading) { // case network error or cancel invoked
                 HandleCancel(uri, fileResultPath);
-                if (PendingURLS.Count > 0) MonoPuppet.StartCoroutine(DownloadEnumerator());
+                if (PendingURLS.Count > 0) RecursiveDownload();
             } else { // case succcesful download
                 _progress += (float)(1f / (float) _initialCount);
                 CompletedURLS.Add(uri);
                 CompletedURLPaths.Add(fileResultPath);
                 if (PendingURLS.Count > 0) { // case more files to download
                     OnDownloadSuccess?.Invoke(DidFinish, uri, fileResultPath);
-                    MonoPuppet.StartCoroutine(DownloadEnumerator());
+                    RecursiveDownload();
                 } else { // case no more files to download
                     _downloading = false;
                     _endTime = DateTime.Now.Millisecond;
@@ -317,3 +299,5 @@ using UnityEngine.Networking;
         }
 
     }
+
+}

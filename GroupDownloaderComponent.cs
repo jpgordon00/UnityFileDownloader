@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+namespace BeastBear {
   // mono-behavior for downloading files, just set 'PendingURLS' in editor
   // invoke 'Download' or set 'DownloadOnStart' to true
   // some fields are provided for editor-proxy access to GroupDownloader object
@@ -48,8 +48,8 @@ using System;
 
     // init GroupDownloader and invoke Download if enabled
     void Start() {
-      _downloader = new GroupDownloader(this, PendingURLS);
-      if (_downloadPath != null) _downloader.DownloadPath =_downloadPath;
+      _downloadPath = Application.persistentDataPath;
+      _downloader = new GroupDownloader(PendingURLS);
       Dictionary<string, string> URIToFilenameMap = new Dictionary<string, string>();
       foreach (var ds in _uriToFilenames) {
         URIToFilenameMap.Add(ds.URI, ds.Filename);
@@ -67,3 +67,5 @@ using System;
         _downloader.AbandonOnFailure = _abandonOnFailure;
     }
   }
+
+}
