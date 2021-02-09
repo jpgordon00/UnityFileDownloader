@@ -8,7 +8,7 @@ using UnityEngine.Networking;
     // downloads multiple files to a path ( one-after-another execution )
     // events for download failure and success
     // all pending URI's should be pre-checked for syntax
-    // can assign filenames via filenameToURI or 
+    // can assign filenames via filenameToURI or filenameToUriMap 
     public class GroupDownloader {
 
         // path to download each file appended by the file name ofc
