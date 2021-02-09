@@ -179,7 +179,7 @@ public void DownloadFiles2() {
 - Better component for editor use.
 > While the provided GroupDownloaderComponent works as described, it does not allow access to add listeners in the editor. There should also be an option to use the URI to filename function by assigning functions to it in the editor.
 - Easier configuration via chained constructor-like functions. 
-> A special object used for constructing GroupDownloader's will have public methods that all returned a shared object. This allows the programmer to create objects through specifying only the functions they need in place of properties in constructors. Below is a basic example of using this programming structure:
+> An object is used for constructing GroupDownloader's  and will have public methods that all returned its own instance. This allows the programmer to create objects through specifying only the functions they need in place of properties in constructors. Below is a basic example of using this programming structure:
 ```MyObjectCreator.Create(); // creates an MyObject without any params --> new MyObject()
    MyObjectCreator.Create().SetInt(1); // creates a MyObject with 1 set as some property
    MyObjectCreate.Create().SetInt(1).SomeProperty().YouGetIt();
