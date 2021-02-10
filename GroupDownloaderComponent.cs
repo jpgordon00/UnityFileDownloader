@@ -30,6 +30,8 @@ using System;
 
     [SerializeField]
     private string _downloadPath;
+    
+    public string DownloadPath;
 
     // true if the download handler should complete on failure
     [SerializeField] 
