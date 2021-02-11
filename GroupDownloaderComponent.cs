@@ -65,7 +65,7 @@ using System;
 
     // update downloader with internal values
     void Update() {
-        if (_downloader == null) return;
+        if (_downloader == null || _downloadPath == null) return;
         _downloader.DownloadPath = _downloadPath;
         _downloader.AbandonOnFailure = _abandonOnFailure;
     }
