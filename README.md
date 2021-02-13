@@ -184,4 +184,7 @@ public void DownloadFiles2() {
 
 
 ## What I learned.
-- 
+- Extensive testing of all new products should be required.
+> Software needs to be tested with many different conditions that could simulate a real work load. How can a product's developer ever confidently enforce high quality standards without actually testing the product? In other words, how can another developer be certain your product works in the ways it is described in without public testing? In most cases, a clearly defined unit test should suffice as long as it deliberately tests many use cases.
+- Modular software is better than nonmodular software. 
+> While this repository was created to solve a specific problem, this project evolved over time as I updated and added features. Modular components decrease the amount of time it takes to repair, find or add features. This software is does not require modular components due to the problems inherit incomplexity, though it could benefit from some additional modular components. For example, on the list of future features for this project is a need for different download fullfillers. Instead of directly using UnityWebRequest in the projects code, a modular solution would be to wrap the desired features in an interface or some sort of class. Adding a new download fullfiler would be done in the exact same way the code implements its own UnityWebRequest.
