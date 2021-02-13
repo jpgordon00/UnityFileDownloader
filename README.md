@@ -3,14 +3,14 @@ One class for easily downloading multiple files at a time using [UnityWebRequest
 
 ## What does it do?
 - Download any amount of files one-after-anothother.
-> This is considered single-threaded execution because each file waits for the next to finish until downloading. It is unclear if UnityWebRequest is threaded.
+> The call to Download is non-blocking. Files are downloaded asychronously but always one at a time.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
 > By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to cancel and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
 - Progress calculation.
 > Access the current progress of the downloader as a float 0f to 1f.
 - Properties to change timeouts, access elapsed and total time, and more.
-> Access pending, completed and uncomplete URIs. 
+> Access pending, completed and uncomplete URIs as properties in real-time. 
 - Additional [component](https://docs.unity3d.com/ScriptReference/MonoBehaviour.html) for controling the downloader through the editor.
 
 ## How do I use it?
@@ -184,3 +184,4 @@ public void DownloadFiles2() {
 
 
 ## What I learned.
+- 
