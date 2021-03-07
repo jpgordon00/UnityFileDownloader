@@ -26,52 +26,50 @@ One class for easily downloading multiple files at a time using [UnityWebRequest
 - Below is an example of using GroupDowloader in code:
 ```javascript
          // in some .cs file, maybe or maybe not using MonoBehavior
-         public void DownloadFiles1() {
-                  GroupDownloader downloader = new GroupDownloader();
-                  
-                  
-                  /* Add some URLS to download here. */
-                  downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
-                  
-                  /* By default we will use a map of filenames to URIS to name each image.
-                     The key for each pair is the URI and the value would be the filename.
-                     The filename is appended to the DownloadPath.
-                  */
-                  downloader.OnURIToFilename["www.google.com/image/someimage.jpg"] = "myimage.jpg";
-                  
-                  /* All files are downloaded to the DownloadPath property
-                     By defaut it is set to the persistant data path of Unity
-                  */
-                  
-                  
-                  /* If true this stops a download in the event of a failure.
-                     The default value of this property is false
-                  */
-                  downloader.AbandonOnFailure = false;
+        public void DownloadFiles1() {
+          GroupDownloader downloader = new GroupDownloader();
 
-                  /* Add our events as listeners. Can register multiple. */
-                  downloader.OnDownloadFailure += OnUpdateFailure;
-                  downloader.OnDownloadSuccess += OnUpdateSuccess;
-                  
-                  /* Starts the download*/
-                  downloader.Download();
+          /* Add some URLS to download here. */
+          downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
+
+          /* By default we will use a map of filenames to URIS to name each image.
+             The key for each pair is the URI and the value would be the filename.
+             The filename is appended to the DownloadPath.
+          */
+          downloader.OnURIToFilename["www.google.com/image/someimage.jpg"] = "myimage.jpg";
+
+          /* All files are downloaded to the DownloadPath property
+             By defaut it is set to the persistant data path of Unity
+          */
+
+          /* If true this stops a download in the event of a failure.
+             The default value of this property is false
+          */
+          downloader.AbandonOnFailure = false;
+
+          /* Add our events as listeners. Can register multiple. */
+          downloader.OnDownloadFailure += OnUpdateFailure;
+          downloader.OnDownloadSuccess += OnUpdateSuccess;
+
+          /* Starts the download*/
+          downloader.Download();
+        }
+
+        private void OnUpdateFailure(bool completed, string uri, string fileResultPath) {
+            /* Invoked when a file fails to download
+            Invoked multiple times when AbandonOnFailure = false
+            */
+            Debug.Log("Done downloading: " + completed ");
+            Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath ");
          }
- 
-         private void OnUpdateFailure(bool completed, string uri, string fileResultPath) {
-                  /* Invoked when a file fails to download
-                  Invoked multiple times when AbandonOnFailure = false
-                  */
-                  Debug.Log("Done downloading: " + completed");
-                  Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath");
-        }
-         
-        private void OnUpdateSuccess(bool completed, string uri, string fileResultPath) {
-                  /* Invoked when a file downloads succesfully
-                    Invoked multiple times when AbandonOnFailure = false
-                   */
-                  Debug.Log("Success! " + (completed ? "COMPLETED : "INCOMPLETE") + ");
-                  Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
-        }
+
+         private void OnUpdateSuccess(bool completed, string uri, string fileResultPath) {
+               /* Invoked when a file downloads succesfully
+               Invoked multiple times when AbandonOnFailure = false
+               */
+              Debug.Log("Success! " + (completed ? "COMPLETED : "
+              INCOMPLETE ") + "); Debug.Log("URI=" + uri + ", filePath=" + fileResultPath ");
+           }
 ```
 - Below is another example:
 ```javascript
