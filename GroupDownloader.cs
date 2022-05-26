@@ -6,6 +6,9 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.Networking;
+
+namespace UFD
+{
  
     /// <summary>
     /// Used to handle async locking while being able to await
@@ -384,3 +387,5 @@ using UnityEngine.Networking;
         }
  
     }
+ 
+}
