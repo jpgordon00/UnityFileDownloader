@@ -1,9 +1,10 @@
 # UnityGroupDownloader
-One class for easily downloading multiple files at a time using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html).
+Concurently download multiple files from any HTTPS endpoint using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html) on the Unity Platform.
 
 ## What does it do?
-- Download any amount of files one-after-anothother.
-> The call to Download is non-blocking. Files are downloaded asychronously but always one at a time.
+- Download any amount of files concurently!
+> The call to Download is non-blocking. Files are downloaded asychronously and also done concurrently with a property.
+- The 'MaxConcurency' property refers to the amount of web requests that can be made at the same time. The default is 8 but you can set it to any nonnegative integer.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
 > By specifying the 'AbandonOnFailure' property of GroupDownloader to true, a failed download will cause the downloader to cancel and delete all previous files. UnityWebRequests allows the downloader to ensure a file is never partially downloaded via a [DownloadHandler](https://docs.unity3d.com/ScriptReference/Networking.DownloadHandler.html) property.
@@ -59,100 +60,92 @@ One class for easily downloading multiple files at a time using [UnityWebRequest
             /* Invoked when a file fails to download
             Invoked multiple times when AbandonOnFailure = false
             */
-            Debug.Log("Done downloading: " + completed ");
-            Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath ");
          }
 
          private void OnUpdateSuccess(bool completed, string uri, string fileResultPath) {
                /* Invoked when a file downloads succesfully
                Invoked multiple times when AbandonOnFailure = false
                */
-              Debug.Log("Success! " + (completed ? "COMPLETED : "
-              INCOMPLETE ") + "); Debug.Log("URI=" + uri + ", filePath=" + fileResultPath ");
            }
 ```
 - Below is another example:
 ```javascript
 public void DownloadFiles2() {
-                  GroupDownloader downloader = new GroupDownloader();
-                  
-                  /* Setup Success callback inline*/
-                  downloader.OnDownloadSuccess += (bool completed, string uri, string fileResultPath) => {
-                           /* Invoked when a file downloads succesfully
-                           Invoked multiple times when AbandonOnFailure = false
-                           */
-                           Debug.Log("Success! " + (completed ? "COMPLETED : "INCOMPLETE") + ");
-                           Debug.Log( "URI=" + uri + ", filePath=" + fileResultPath");
-                  }
-                  
-                  /* Do the same for an error callback inline */
-                  downloader.OnDownloadFail += (bool completed, string uri, string fileResultPath) => {
-                           /* Invoked when a file fails to download
-                           Invoked multiple times when AbandonOnFailure = false
-                           */
-                           Debug.Log("Done downloading: " + completed");
-                           Debug.Log("Failure. URI=" + uri + ", fileResultIfDownloaded=" + fileResultPath");
-                  }
+    GroupDownloader downloader = new GroupDownloader();
+
+    /* Setup Success callback inline*/
+    downloader.OnDownloadSuccess += (bool completed, string uri, string fileResultPath) => {
+        /* Invoked when a file downloads succesfully
+            Invoked multiple times when AbandonOnFailure = false
+            */
+            }
+
+            /* Do the same for an error callback inline */
+            downloader.OnDownloadFail += (bool completed, string uri, string fileResultPath) => {
+              /* Invoked when a file fails to download
+              Invoked multiple times when AbandonOnFailure = false
+              */
+              }
+
+              /* Add some URLS to download here. */
+              downloader.PendingURLS.Add("
+                www.google.com / image / someimage.jpg ");
+
+                /* This time lets use a function to decide how each URI is named.
+                   We will specify the property 'UseURIToFilenameMap' to False
+                   
+                */
+                downloader.UseURIFilenameMap = false;
+
+                /* All files are downloaded to the DownloadPath property
+                   By defaut it is set to the persistant data path of Unity
+                   Spicify the delegate URIToFilename, which has a string param and returns a string
+                */
+                int i = 0; downloader.URIToFilename = delegate(string uri) {
+                  /* 
+                  URI will be called for each URI pending to be downloaded
+                  And the filename will be the return value of this statement
+                  */
+                  return "
+                  myfile " + i++; // psudeo code
+                };
+
+                /* If true this stops a download in the event of a failure.
+                   Lets stop this download in case of failure ;)
+                */
+                downloader.AbandonOnFailure = true;
+
+                /* Starts the download*/
+                downloader.Download();
+
+                /* Did the downloader encounter any errors? /*
+                if (downloader.DidError()) {} // some code
                 
-                  /* Add some URLS to download here. */
-                  downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
-                  
-                  /* This time lets use a function to decide how each URI is named.
-                     We will specify the property 'UseURIToFilenameMap' to False
-                     
-                  */
-                  downloader.UseURIFilenameMap = false;
-                  
-                  /* All files are downloaded to the DownloadPath property
-                     By defaut it is set to the persistant data path of Unity
-                     Spicify the delegate URIToFilename, which has a string param and returns a string
-                  */
-                  int i = 0;
-                  downloader.URIToFilename = delegate(string uri) {
-                           /* 
-                           URI will be called for each URI pending to be downloaded
-                           And the filename will be the return value of this statement
-                           */
-                           return "myfile" + i++; // psudeo code
-                  };
-                  
-                  
-                  /* If true this stops a download in the event of a failure.
-                     Lets stop this download in case of failure ;)
-                  */
-                  downloader.AbandonOnFailure = true;
-                  
-                  /* Starts the download*/
-                  downloader.Download();
-                  
-                  /* Did the downloader encounter any errors? /*
-                  if (downloader.DidError()) {} // some code
-                  
-                  /* Did the downloader finish? */
-                  if (downloader.DidFinish()) {} // some code
-                  
-                  /* Time in miliseconds the downloader started.*/
-                  int startTime = downloader.StartTime;
-                  
-                  /* Time in miliseconds the downloader finished
-                     0 if not finished
-                  */
-                  int endTime = downloader.EndTime;
-                  
-                  /* Total time taken to downloader
-                     OR current time downloading if currently downloading
-                  */
-                  int elapsed = downloader.Elapsed;
-                  
-                  /* Gets the current progress as a percent float 
-                     Where 0.0 is 0% and 1.0 is %100
-                  */
-                  float prog = downloader.Progress;
-                  
-                  /* Want to cancel the downloader? Easy. */
-                  downloader.Cancel();
-                  
-         }
+                /* Did the downloader finish? */
+                if (downloader.DidFinish()) {} // some code
+
+                /* Time in miliseconds the downloader started.*/
+                int startTime = downloader.StartTime;
+
+                /* Time in miliseconds the downloader finished
+                   0 if not finished
+                */
+                int endTime = downloader.EndTime;
+
+                /* Total time taken to downloader
+                   OR current time downloading if currently downloading
+                */
+                int elapsed = downloader.Elapsed;
+
+                /* Gets the current progress as a percent float 
+                   Where 0.0 is 0% and 1.0 is %100
+                */
+                float prog = downloader.Progress;
+
+                /* Want to cancel the downloader? Easy. */
+                downloader.Cancel();
+
+              }
 ```
 
 
