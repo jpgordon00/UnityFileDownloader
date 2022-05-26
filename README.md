@@ -1,9 +1,9 @@
 # UnityGroupDownloader
-Concurently download multiple files from any HTTPS endpoint using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html) on the Unity Platform.
+Concurrently download multiple files from any HTTPS endpoint using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html) on the Unity Platform.
 
 ## What does it do?
-- Download any amount of files concurently!
-> The call to Download is non-blocking. Files are downloaded asychronously and also done concurrently with a property.
+- Download any amount of files concurrently! Its super fast!
+> The call to Download happens asyncronously and it dispatches multiple web requests at a time.
 - The 'MaxConcurency' property refers to the amount of web requests that can be made at the same time. The default is 8 but you can set it to any nonnegative integer.
 - Simple success and error callbacks via C# [events](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/).
 - Atomic file downloading.
@@ -25,7 +25,7 @@ Concurently download multiple files from any HTTPS endpoint using [UnityWebReque
 ![](https://i.gyazo.com/76904f86bacc0d49f6686ee52579e29e.png)
 
 - Below is an example of using GroupDowloader in code:
-```javascript
+```java
          // in some .cs file, maybe or maybe not using MonoBehavior
         public void DownloadFiles1() {
           GroupDownloader downloader = new GroupDownloader();
@@ -69,7 +69,7 @@ Concurently download multiple files from any HTTPS endpoint using [UnityWebReque
            }
 ```
 - Below is another example:
-```javascript
+```java
 public void DownloadFiles2() {
     GroupDownloader downloader = new GroupDownloader();
 
