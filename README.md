@@ -36,7 +36,7 @@
 ![](https://i.gyazo.com/76904f86bacc0d49f6686ee52579e29e.png)
 
 - Below is an example of using GroupDowloader in code:
-```java
+```csharp
          // in some .cs file, maybe or maybe not using MonoBehavior
         public void DownloadFiles1() {
           GroupDownloader downloader = new GroupDownloader();
@@ -80,7 +80,7 @@
            }
 ```
 - Below is another example:
-```java
+```csharp
 public void DownloadFiles2() {
     GroupDownloader downloader = new GroupDownloader();
 
