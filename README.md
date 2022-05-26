@@ -10,7 +10,7 @@
   </a>
 </p>
 
-> One C# file that lets you concurrently download multiple files from any HTTPS endpoint using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html).
+> One C# that lets you concurrently download multiple files from any HTTPS endpoint using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html).
 
 ## What does it do?
 - Download any amount of files concurrently! Its super fast!
