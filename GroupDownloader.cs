@@ -187,9 +187,9 @@ namespace UFD
  
         /// <summary>
         /// Number of files to download at once.
-        /// Set to 1 to download one by one .
+        /// Set to 1 to download one by one.
         /// </summary>
-        public int MaxConcurrency = 16;
+        public int MaxConcurrency = 5;
  
         // download progress of all succesful and pending downloads
         /// from 0f to 1f 
@@ -254,6 +254,8 @@ namespace UFD
               foreach(var str in urls) PendingURLS.Add(str);
             }
         }
+
+        public int NumOpen => _initialCount >= MaxConcurrency ? MaxConcurrency : PendingURLS.Count;
  
         // starts a group download with PendingURLS
         public bool Download() {
@@ -262,7 +264,7 @@ namespace UFD
             _downloading = true;
             _startTime = DateTime.Now.Millisecond;
             
-            for (int i = 0; i < MaxConcurrency; i++) _Dispatch();
+            for (int i = 0; i < NumOpen; i++) _Dispatch();
             return true;
         }
 
@@ -299,6 +301,7 @@ namespace UFD
             uwr.downloadHandler = dh;
             var operation = uwr.SendWebRequest();
             while (!operation.isDone) await Task.Delay(100);
+            _N--;
             _HandleDispatchComplete(uwr, uri, fileName, fileResultPath);
         }
 
@@ -318,21 +321,19 @@ namespace UFD
                 if (PendingURLS.Count > 0) { // case more files to download
                     OnDownloadSuccess?.Invoke(DidFinish, uri, fileResultPath);
                     // case: too many files processing at once, wait for _WaitForConcurrency
-                    if (_N > MaxConcurrency) {
+                    if (NumOpen <= 0) {
                         var time = DateTime.UtcNow.Millisecond;
                         while (DateTime.UtcNow.Millisecond - time < _WaitForConcurrency) await Task.Delay(50);
-                        if (_N > MaxConcurrency) {
+                        if (NumOpen <= 0) {
                         // case: too many files processing at once, wait for _WaitForConcurrency
                         // cancel bro
                         return;
                     }
                     // new worker thread
                     _Dispatch();
-                   _N--;
                 }
                 // new worker thread
                 _Dispatch();
-                _N--;
                 } else { 
                     // case no more files to download
                     _downloading = false;
