@@ -52,7 +52,7 @@ namespace UFD
     // all pending URI's should be pre-checked for syntax
     // can assign filenames via filenameToURI or 
     public class GroupDownloader {
-        internal readonly SemaphoreLocker _Locker = new SemaphoreLocker();
+        internal readonly static SemaphoreLocker _Locker = new SemaphoreLocker();
  
         // path to download each file appended by the file name ofc
         // defaults to persistent data path
@@ -243,11 +243,6 @@ namespace UFD
           }
         }
  
-        /// <summary>
-        /// Wait this many milliseconds to fulfill new downloads in a concurrency thrread
-        /// </summary>
-        public float _WaitForConcurrency = 1200;
- 
         // constructor to feed in pending urls
         public GroupDownloader(List < string > urls = null) {
             if (urls != null) {
@@ -255,7 +250,20 @@ namespace UFD
             }
         }
 
-        public int NumOpen => _initialCount >= MaxConcurrency ? MaxConcurrency : PendingURLS.Count;
+        /// <summary>
+        /// Current number of open processing threads is either MaxConcurrncy or the amount of PendingURLS left.
+        /// </summary>
+        public int NumOpen => PendingURLS.Count >= MaxConcurrency ? MaxConcurrency : PendingURLS.Count;
+
+        /// <summary>
+        /// Current number of concurrent WebRequest's being processed in the moment.
+        /// </summary>
+        public int NumThreads => _N;
+
+        /// <summary>
+        /// True to continue dispatching threads after error.
+        /// </summary>
+        public bool ContinueAfterError = false;
  
         // starts a group download with PendingURLS
         public bool Download() {
@@ -263,36 +271,38 @@ namespace UFD
             _initialCount = PendingURLS.Count;
             _downloading = true;
             _startTime = DateTime.Now.Millisecond;
-            
-            for (int i = 0; i < NumOpen; i++) _Dispatch();
+
+            int n = _initialCount >= MaxConcurrency ? MaxConcurrency : _initialCount;
+            for (int i = 0; i < n; i++) _Dispatch();
             return true;
         }
 
         internal int _N = 0;
  
-        // dispatch each request, assume one by one
-        private async void _Dispatch() {
+        // dispatch each request
+        private void _Dispatch() {
             if (PendingURLS.Count == 0) { // handle no URL case
                 HandleCancel();
                 return;
-                }
-                string uri = PendingURLS[0];
-                if ((OnURIToFilename == null && !UseURIFilenameMap) || (UseURIFilenameMap && !URIFilenameMap.ContainsKey(uri))) {
+            }
+            string uri = PendingURLS[0];
+            if ((OnURIToFilename == null && !UseURIFilenameMap) || (UseURIFilenameMap && !URIFilenameMap.ContainsKey(uri))) {
                 HandleCancel();
                 return;
-                }
-                string fileName = UseURIFilenameMap ? URIFilenameMap[uri]: OnURIToFilename(uri);
-                if (fileName == null && AbandonOnFailure) {
+            }
+            string fileName = UseURIFilenameMap ? URIFilenameMap[uri]: OnURIToFilename(uri);
+            if (fileName == null && AbandonOnFailure) {
                 HandleCancel();
                 return;
-                }
-                var fileResultPath = Path.Combine(DownloadPath, fileName);
-                PendingURLS.RemoveAt(0);
-                if (!Downloading) { // case cancel invoked
+            }
+            var fileResultPath = Path.Combine(DownloadPath, fileName);
+            PendingURLS.RemoveAt(0);
+            if (!Downloading) { // case cancel invoked
                 HandleCancel(uri, fileResultPath);
                 if (AbandonOnFailure) return;
-                }
+            }
             _N ++;
+            Debug.Log("Dispatched!: " + NumThreads);
             var uwr = new UnityWebRequest(uri);
             uwr.timeout = Timeout;
             uwr.method = UnityWebRequest.kHttpVerbGET;
@@ -300,52 +310,52 @@ namespace UFD
             dh.removeFileOnAbort = true;
             uwr.downloadHandler = dh;
             var operation = uwr.SendWebRequest();
-            while (!operation.isDone) await Task.Delay(100);
-            _N--;
-            _HandleDispatchComplete(uwr, uri, fileName, fileResultPath);
+            operation.completed += (obj) => {
+                _N--;
+                _HandleDispatchComplete(uwr, uri, fileName, fileResultPath);
+            };
         }
-
-        private async Task _HandleDispatchComplete(UnityWebRequest uwr, string uri, string fileName, string fileResultPath) {
+        /// <summary>
+        /// Handle the logic for progress and handling a thread's completion.
+        /// Used SeamorpheLocker to ensure this function only gets invoked syncronously.
+        /// </summary>
+        /// <param name="uwr"></param>
+        /// <param name="uri"></param>
+        /// <param name="fileName"></param>
+        /// <param name="fileResultPath"></param>
+        /// <returns></returns>
+        internal async Task _HandleDispatchComplete(UnityWebRequest uwr, string uri, string fileName, string fileResultPath) {
             await _Locker.LockAsync(async () => {
                 if (!Downloading) {
                     return;
                 }
-            if (uwr.isNetworkError || uwr.isHttpError) { // case network error 
-                Debug.LogError(uwr.error);
-                HandleCancel(uri, fileResultPath);
-                //if (PendingURLS.Count > 0) _HandleDispatch();
-            } else { // case succcesful download
-                _progress += (float)(1f / (float) _initialCount);
-                CompletedURLS.Add(uri);
-                CompletedURLPaths.Add(fileResultPath);
-                if (PendingURLS.Count > 0) { // case more files to download
-                    OnDownloadSuccess?.Invoke(DidFinish, uri, fileResultPath);
-                    // case: too many files processing at once, wait for _WaitForConcurrency
-                    if (NumOpen <= 0) {
-                        var time = DateTime.UtcNow.Millisecond;
-                        while (DateTime.UtcNow.Millisecond - time < _WaitForConcurrency) await Task.Delay(50);
-                        if (NumOpen <= 0) {
-                        // case: too many files processing at once, wait for _WaitForConcurrency
-                        // cancel bro
-                        return;
+                if (uwr.isNetworkError || uwr.isHttpError) { // case network error 
+                    HandleCancel(uri, fileResultPath);
+                    if (ContinueAfterError && PendingURLS.Count > 0) _Dispatch();
+                } else { // case succcesful download
+                    _progress += (float)(1f / (float) _initialCount);
+                    CompletedURLS.Add(uri);
+                    CompletedURLPaths.Add(fileResultPath);
+                    if (PendingURLS.Count > 0) { // case more files to download
+                        OnDownloadSuccess?.Invoke(false, uri, fileResultPath);
+                        // new worker thread
+                        _Dispatch();
+                    } else if (NumThreads == 0){ 
+                        // case no more files to download and all threads are relinquished
+                        _downloading = false;
+                        _endTime = DateTime.Now.Millisecond;
+                        _elapsedTime = EndTime - StartTime;
+                        OnDownloadSuccess?.Invoke(true, uri, fileResultPath);
                     }
-                    // new worker thread
-                    _Dispatch();
                 }
-                // new worker thread
-                _Dispatch();
-                } else { 
-                    // case no more files to download
-                    _downloading = false;
-                    _endTime = DateTime.Now.Millisecond;
-                    _elapsedTime = EndTime - StartTime;
-                    OnDownloadSuccess?.Invoke(DidFinish, uri, fileResultPath);
-                }
-            }
             });
         }
  
-        // handles a failure of cancel post-download or pre-download
+        /// <summary>
+        /// Handles a failure to download pre or post download.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="fileResultPath"></param>
         private void HandleCancel(string uri = null, string fileResultPath = null) {
             _endTime = DateTime.Now.Millisecond;
             _elapsedTime = EndTime - StartTime;
