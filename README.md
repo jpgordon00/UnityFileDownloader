@@ -37,6 +37,8 @@
 
 - Below is an example of using GroupDowloader in code:
 ```csharp
+import UFD;
+...
          // in some .cs file, maybe or maybe not using MonoBehavior
         public void DownloadFiles1() {
           GroupDownloader downloader = new GroupDownloader();
