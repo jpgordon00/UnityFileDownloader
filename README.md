@@ -40,6 +40,10 @@
          // in some .cs file, maybe or maybe not using MonoBehavior
         public void DownloadFiles1() {
           GroupDownloader downloader = new GroupDownloader();
+          
+          
+          // change the amount of files it can download at once
+          downloader.MaxConcurrency = 5;
 
           /* Add some URLS to download here. */
           downloader.PendingURLS.Add("www.google.com/image/someimage.jpg");
