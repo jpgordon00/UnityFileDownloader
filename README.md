@@ -87,6 +87,8 @@ import UFD;
 ```
 - Below is another example:
 ```csharp
+import UFD;
+...
 public void DownloadFiles2() {
     GroupDownloader downloader = new GroupDownloader();
 
