@@ -1,5 +1,3 @@
-# UnityFileDownloader
-
 <h1 align="center">UnityFileDownloader☁️</h1>
 <p align="center">
   <a href="https://www.npmjs.com/package/readme-md-generator">
