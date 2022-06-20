@@ -302,7 +302,6 @@ namespace UFD
                 if (AbandonOnFailure) return;
             }
             _N ++;
-            Debug.Log("Dispatched!: " + NumThreads);
             var uwr = new UnityWebRequest(uri);
             uwr.timeout = Timeout;
             uwr.method = UnityWebRequest.kHttpVerbGET;
