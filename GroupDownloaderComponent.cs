@@ -36,6 +36,12 @@ using System;
     // true if the download handler should complete on failure
     [SerializeField] 
     private bool _abandonOnFailure = false;
+    
+    ///
+    /// Amount of files to download at once. 1 is one-by-one.
+    ///
+    [SerializeField]
+    public int MaxConcurency = 1;
 
     [SerializeField]
     private List<string> _pendingUrls = new List<string>();
@@ -53,6 +59,7 @@ using System;
     void Start() {
       _downloadPath = Application.persistentDataPath;
       _downloader = new GroupDownloader(PendingURLS);
+      _downloader.MaxConcurency = MaxConcurency;
       Dictionary<string, string> URIToFilenameMap = new Dictionary<string, string>();
       foreach (var ds in _uriToFilenames) {
         URIToFilenameMap.Add(ds.URI, ds.Filename);
@@ -61,6 +68,7 @@ using System;
       if (_downloadOnStart && _downloader != null) {
         _downloader.Download();
       }
+      
     }
 
     // update downloader with internal values
