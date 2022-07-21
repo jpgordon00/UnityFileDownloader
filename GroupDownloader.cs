@@ -47,7 +47,7 @@ namespace UFD
  
  
  
-    // downloads multiple files to a path ( one-after-another execution )
+    // downloads multiple files to a path
     // events for download failure and success
     // all pending URI's should be pre-checked for syntax
     // can assign filenames via filenameToURI or 
