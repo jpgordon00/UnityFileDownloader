@@ -339,7 +339,10 @@ namespace UFD
                         OnDownloadSuccess?.Invoke(false, uri, fileResultPath);
                         // new worker thread
                         _Dispatch();
-                    } else if (NumThreads == 0){ 
+                    } else if (NumThreads > 0) {
+                        // case no more files to download but threads are still waiting in the semaphore
+                        OnDownloadSuccess?.Invoke(false, uri, fileResultPath);
+                    } else {
                         // case no more files to download and all threads are relinquished
                         _downloading = false;
                         _endTime = DateTime.Now.Millisecond;
