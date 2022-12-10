@@ -9,12 +9,6 @@
   </a>
 </p>
 
-# UnityFileDownloader
-
-A file downloader that handles asyncronous and concurrent file downloading, implicit multi-part file downloading, pausing/restarting, and more.
-
-
-# UnityFileDownloader
 
 A file downloader that handles asyncronous and concurrent file downloading, implicit multi-part file downloading, pausing/restarting, and more.
 
