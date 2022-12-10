@@ -80,10 +80,13 @@ namespace UFD
 
         public override bool Paused => _Paused;
 
-        public override bool DidError => false;
+        internal bool _DidError = false;
+        public override bool DidError => _DidError;
 
         public override int StartTime => _StartTime;
         public override int EndTime => _EndTime;
+
+        public event Action<int, string> OnDownloadError;
 
         /// <summary>
         /// TODO: Implement
@@ -138,9 +141,11 @@ namespace UFD
             if (_DownloadPath == null) return null;
             _StartTime = DateTime.Now.Millisecond;
             UnityWebRequestAsyncOperation resp = null;
+            UnityWebRequest uwr = null;
             if (!MultipartDownload) {
-                resp = HTTPHelper.Download(Uri, _DownloadPath, AbandonOnFailure, false, RequestHeaders, _Timeout);
+                resp = HTTPHelper.Download(ref uwr, Uri, _DownloadPath, AbandonOnFailure, false, RequestHeaders, _Timeout);
                 resp.completed += (obj) => {
+                    if (!File.Exists(DownloadResultPath)) return;
                     _Progress = 1.0f;
                     OnDownloadSuccess?.Invoke();
                     _EndTime = DateTime.Now.Millisecond;
@@ -167,18 +172,29 @@ namespace UFD
                 string str = "";
                 RequestHeaders.Add("Range", str = $"bytes={fileSize}-{fileSize + reqChunkSize}");
                 Debug.Log(str);
-                resp = HTTPHelper.Download(Uri, _DownloadPath, AbandonOnFailure, true, RequestHeaders, _Timeout);
+                resp = HTTPHelper.Download(ref uwr, Uri, _DownloadPath, AbandonOnFailure, true, RequestHeaders, _Timeout);
                 resp.completed -= _OnCompleteMulti;
                 resp.completed += _OnCompleteMulti;
                 } catch (Exception e) {
                     Debug.LogError(e.ToString());
                 }
             }
+            resp.completed += (obj) => {
+                if (uwr.isHttpError || uwr.isNetworkError)
+                {
+                    _DidError = true;
+                    OnDownloadError?.Invoke(0, uwr.error);
+                    Cancel();
+                }
+            };
             return resp;
         }
 
+
+
         internal void _OnCompleteMulti(AsyncOperation obj)
         {
+            if (!File.Exists(DownloadResultPath)) return;
                     int fileSize = 0;
                 if (File.Exists(DownloadResultPath)) fileSize = (int) (new FileInfo(DownloadResultPath).Length);
                 int remaining = _ExpectedSize - fileSize;

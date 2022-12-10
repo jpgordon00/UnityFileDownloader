@@ -118,8 +118,6 @@ namespace UFD
 
         public int ElapsedTime => Math.Abs(StartTime == 0 ? 0 : (EndTime == 0 ? DateTime.Now.Millisecond - StartTime : EndTime - StartTime));
 
-        public event Action<int, string> OnDownloadError;
-
         /// <summary>
         /// If this fulfiller has `MultipartDownload` set to true, then pause the download.
         /// Returns true if this downloader was succesfully paused.

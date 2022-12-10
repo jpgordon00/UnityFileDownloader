@@ -36,6 +36,8 @@ namespace UFD
         /// </summary>
         public Dictionary<string, string> RequestHeaders = null;
 
+        public bool TryMultipartDownload = true;
+
         /// <summary>
         /// Stores the actual IDownloadFulfiller's associated with each file that is to be downloaded.
         /// </summary>
@@ -155,6 +157,7 @@ namespace UFD
                     idf.AbandonOnFailure = AbandonOnFailure;
                     idf.Timeout = Timeout;
                     idf.RequestHeaders = RequestHeaders;
+                    idf.TryMultipartDownload = TryMultipartDownload;
                     fulfillers.Add(idf);
                     PendingURIS.Add(str);
                     
@@ -164,8 +167,7 @@ namespace UFD
                     /// <param name="errorCode"></param>
                     /// <param name="errorMsg"></param>
                     /// <returns></returns>
-                    idf.OnDownloadError += async (int errorCode, string errorMsg) => {
-                        if (AbandonOnFailure) await Cancel(); // TODO: do something with response?
+                    ((UWRFulfiller) idf).OnDownloadError += async (int errorCode, string errorMsg) => {
                         DidError = true;
                         OnDownloadError?.Invoke(idf.Uri, errorCode, errorMsg);
                         _IncompletedUris.Add(new string[]{idf.Uri});

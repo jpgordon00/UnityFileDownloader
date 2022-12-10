@@ -258,6 +258,7 @@ namespace UFD
             IDownloadFulfiller idf = _Fulfillers[0];
             _PendingUris = _PendingUris.Dequeue();
             _Fulfillers = _Fulfillers.Dequeue();
+            _FulfillersOld = _FulfillersOld.Add(new IDownloadFulfiller[]{idf}); // add to old
             if (idf._CompletedMultipartDownload) return _ReturnFalseAsync();
             if (!idf._DidHeadReq && idf.TryMultipartDownload) {
                 UnityWebRequestAsyncOperation treq = ((UWRFulfiller)idf)._HeadRequest();
@@ -350,7 +351,7 @@ namespace UFD
                         _Dispatch(idf);
                         return;
                     } else {
-                        _FulfillersOld = _FulfillersOld.Add(new IDownloadFulfiller[]{idf}); // add to old
+                        //_FulfillersOld = _FulfillersOld.Add(new IDownloadFulfiller[]{idf}); // add to old
                     }
                     if (_PendingUris.Length > 0)
                     {
@@ -409,11 +410,11 @@ namespace UFD
         /// </summary>
         internal void _HandleAbandonOnFailure()
         {
-            if (!AbandonOnFailure) foreach (var idf in _Fulfillers)
+            if (AbandonOnFailure) foreach (var idf in _Fulfillers)
             {
                 idf.Cancel();
             }
-            if (!AbandonOnFailure) foreach (var idf in _FulfillersOld)
+            if (AbandonOnFailure) foreach (var idf in _FulfillersOld)
             {
                 idf.Cancel();
             }

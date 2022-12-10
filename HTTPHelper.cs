@@ -83,6 +83,7 @@ namespace UFD
                 foreach(var kvp in headers) req.SetRequestHeader(kvp.Key, kvp.Value);
             }
 
+            Debug.Log($"Head URI={uri}");
             if (headers != null) foreach (var str in headers) Debug.Log($"[{str.Key}={str.Value}");
             UnityWebRequest.Result result = await req.SendWebRequest();
 
@@ -109,14 +110,18 @@ namespace UFD
             if (headers != null) {
                 foreach(var kvp in headers) req.SetRequestHeader(kvp.Key, kvp.Value);
             }
+
+            Debug.Log($"Head URI={uri}");
+            if (headers != null) foreach (var str in headers) Debug.Log($"[{str.Key}={str.Value}");
             return req.SendWebRequest();
         }
 
 
-        public static UnityWebRequestAsyncOperation Download(string uri, String path = null, bool abandonOnFailure = false, bool append = false, Dictionary < string, string > headers = null, int timeoutSeconds = 3) {
+        public static UnityWebRequestAsyncOperation Download(ref UnityWebRequest req, string uri, String path = null, bool abandonOnFailure = false, bool append = false, Dictionary < string, string > headers = null, int timeoutSeconds = 3) {
             if (path == null) path = Application.persistentDataPath; // c# does not support non-const defaults
+            if (headers != null) foreach (var str in headers) Debug.Log($"[{str.Key}={str.Value}");
             HTTPResponse resp = null;
-            UnityWebRequest req = new UnityWebRequest(uri);
+            req = new UnityWebRequest(uri);
             req.method = UnityWebRequest.kHttpVerbGET;
             string filename = GetFilenameFromUriNaively(uri);
             string _path = Path.Combine(path, filename);
