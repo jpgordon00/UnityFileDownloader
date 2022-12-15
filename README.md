@@ -58,6 +58,9 @@ public class Example
             "https://wallpaperaccess.com/full/1308917.jpg",
             "https://wallpaperaccess.com/full/281585.jpg",
         });
+        ufd.RequestHeaders = new Dictionary<string, string>{
+          ["key"] = "value"
+        };
         ufd.AbandonOnFailure = true;
         ufd.ContinueAfterFailure = false;
         ufd.MaxConcurrency = 3;
