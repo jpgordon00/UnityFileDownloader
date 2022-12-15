@@ -13,7 +13,7 @@ namespace UFD
         /// <param name="uris"></param>
         public IDownloader(params string[] uris)
         {
-            this._Uris = uris;
+            this.Uris = uris;
         }
 
         /// <summary>
