@@ -61,8 +61,11 @@ public class Example
         ufd.AbandonOnFailure = true;
         ufd.ContinueAfterFailure = false;
         ufd.MaxConcurrency = 3;
+        ufd.TryMultipartDownload = true; // false to disable multipart
         ufd.OnDownloadSuccess += (string uri) => {
             Debug.Log("Downloaded " + uri + "!");
+            IDownloadFulfiller idf = ufd.GetFulfiller(uri);
+            Debug.Log("This download was " + (ufd.MultipartDownload ? "" : "NOT ") + "downloaded in multiparts.");
 
             if (true) { // dummy
                 ufd.Cancel();

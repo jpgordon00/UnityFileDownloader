@@ -115,6 +115,8 @@ namespace UFD
         /// </summary>
         public bool Completed => Progress == 1.0f;
 
+        public int MultipartChunkSize;
+
         public abstract string DownloadPath
         {
             get; set;
@@ -158,6 +160,7 @@ namespace UFD
                     idf.Timeout = Timeout;
                     idf.RequestHeaders = RequestHeaders;
                     idf.TryMultipartDownload = TryMultipartDownload;
+                    idf.IntitialChunkSize = MultipartChunkSize; 
                     fulfillers.Add(idf);
                     PendingURIS.Add(str);
                     UnityEngine.Debug.Log(fulfillers.Count);
@@ -166,7 +169,7 @@ namespace UFD
                     /// Invok action on parent
                     /// </summary>
                     /// <returns></returns>
-                    idf.OnDownloadChunkedSucces += () => {
+                     ((UWRFulfiller) idf).OnDownloadChunkedSucces += () => {
                         OnDownloadChunkedSucces?.Invoke(idf.Uri);
                     };
                     

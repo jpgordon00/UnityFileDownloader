@@ -10,10 +10,6 @@ namespace UFD
 
     public class UWRFulfiller : IDownloadFulfiller
     {
-        /// <summary>
-        /// Amount of bytes to chunk each request by
-        /// </summary>
-        public int IntitialChunkSize = 200000;
 
         protected int _ExpectedSize = 0;
         protected int _ChunkSize = 0;

@@ -372,6 +372,12 @@ namespace UFD
             });
         }
 
+        
+        public IDownloadFulfiller GetFulfiller(string uri)
+        {
+            return _Fulfillers.Where(idf => idf.Uri == uri).ToArray()[0];
+        }
+
         /// <summary>
         /// Cancel all takss for this downloader asyncronously.
         /// </summary>

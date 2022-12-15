@@ -21,7 +21,7 @@ public class UnitTests : MonoBehaviour
         });
         ufd.AbandonOnFailure = true;
         ufd.ContinueAfterFailure = false;
-        ufd.MaxConcurrency = 3;
+        ufd.MaxConcurrency = 2; // Unity does impose an asyncronous limit so I'd keep this under 10 
         ufd.OnDownloadSuccess += (string uri) => {
             Debug.Log("Downloaded " + uri + "!");
 
@@ -30,8 +30,9 @@ public class UnitTests : MonoBehaviour
                 //ufd.Cancel();
             }
         };
-        ufd.OnDownloadChunkedSucces += (uri) {
-            Debug.Log("Progress for " + uri + " is " + ufd.GetProgress(uri));
+        ufd.OnDownloadChunkedSucces += (uri) => {
+            IDownloadFulfiller idf = ufd.GetFulfiller(uri);
+            Debug.Log("Progress for " + uri + " is " + ufd.GetProgress(uri) + ", and " + idf.BytesDownloaded + " bytes downloaded, " + idf.MegabytesDownloadedPerSecond + " mb/s.");
         };
         ufd.OnDownloadsSuccess += () => {
             Debug.Log("Downloaded all files. (inline func)");
@@ -40,7 +41,7 @@ public class UnitTests : MonoBehaviour
         {
             Debug.Log($"ErrorCode={errorCode}, EM={errorMsg}, URU={uri}");
         };
-        Debug.Log(ufd.IntitialChunkSize); // amount of bytes used by each chunked https request 
+        Debug.Log(ufd.MultipartChunkSize); // amount of bytes used by each chunked https request 
         await ufd.Download();
         Debug.Log("Downloaded all files. (post-awaitable Download invokation)");
         Debug.Log("MB/S = " + ufd.MegabytesDownloadedPerSecond);
