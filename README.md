@@ -12,7 +12,7 @@ A file downloader that handles asyncronous and concurrent file downloading, impl
 
 ## Appendix
 
-This file downloader was built because UnityWebRequest and recent solutions built by Unity and third-parties are subpar. Please submit any pull-requests that you deem to be a necessary contribution.
+This file downloader was built because UnityWebRequest and recent solutions built by Unity and third-parties are subpar and bare of features. While this project is written 100% in C#, this downloader should support all platforms that Unity does.
 
 ## Features
 
