@@ -24,6 +24,7 @@ public class UnitTests : MonoBehaviour
         ufd.AbandonOnFailure = true;
         ufd.ContinueAfterFailure = false;
         ufd.MaxConcurrency = 3;
+        ufd.DownloadPath = "C://";
         ufd.TryMultipartDownload = true; // false to disable multipart
         ufd.OnDownloadSuccess += (string uri) => {
             Debug.Log("Downloaded " + uri + "!");
