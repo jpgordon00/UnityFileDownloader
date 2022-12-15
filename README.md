@@ -21,7 +21,7 @@ This file downloader was built because UnityWebRequest and recent solutions buil
 - Provides both task-based asyncronous methods and standard callbacks for errors, individual file completion, all file completion, and more
 - Granularity of properties can be on a per-file basis, providing the ability to pause/restart, and to get/set progress, timeouts, callbacks and more
 - Optional "atomic" file downloading and ability to continue downloading through HTTP/S errors
-- Code structure that allows for modularity of download both fulfillment (such as UnityWebRequest) and dispatching of downloads.
+- Code structure that allows for modularity of both download fulfillment (such as UnityWebRequest) and dispatching of downloads.
 
 ## Usage/Examples
 
