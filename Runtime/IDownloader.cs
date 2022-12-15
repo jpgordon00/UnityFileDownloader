@@ -163,7 +163,6 @@ namespace UFD
                     idf.IntitialChunkSize = MultipartChunkSize; 
                     fulfillers.Add(idf);
                     PendingURIS.Add(str);
-                    UnityEngine.Debug.Log(fulfillers.Count);
 
                     /// <summary>
                     /// Invok action on parent
