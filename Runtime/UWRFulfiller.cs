@@ -10,7 +10,10 @@ namespace UFD
 
     public class UWRFulfiller : IDownloadFulfiller
     {
-        internal const int _IntitialChunkSize = 50000;
+        /// <summary>
+        /// Amount of bytes to chunk each request by
+        /// </summary>
+        public int IntitialChunkSize = 200000;
 
         protected int _ExpectedSize = 0;
         protected int _ChunkSize = 0;
@@ -27,7 +30,7 @@ namespace UFD
         internal bool _AbandonOnFailure = true;
         internal bool _Paused = false;
 
-        public event Action OnDownloadSuccess, OnCancel;
+        public event Action OnDownloadSuccess, OnCancel, OnDownloadChunkedSucces;
 
         public bool Completed => Progress == 1.0f;
 
@@ -101,7 +104,7 @@ namespace UFD
         }
 
         /// <summary>
-        /// I too request head from the person reading this. Lol
+        /// Submits a head request to the URI to determine if a multipart download is possible.
         /// </summary>
         /// <returns></returns>
         public UnityWebRequestAsyncOperation _HeadRequest()
@@ -127,14 +130,17 @@ namespace UFD
                         UnityEngine.Debug.LogError($"URI {_Uri} does not support Multipart downloading.");
                         return;
                     }
-                    _ChunkSize = _IntitialChunkSize;
+                    _ChunkSize = IntitialChunkSize;
                     // download not multipart if size is below chunksize
-                    Debug.Log("Found " + _ExpectedSize + " total.");
                     MultipartDownload = _ExpectedSize > _ChunkSize;
                 };
                 return hreq;
         }
 
+        /// <summary>
+        /// Downloads the given URI in either a single or multi-part download.
+        /// </summary>
+        /// <returns></returns>
         public override UnityWebRequestAsyncOperation Download() {
             if (_CompletedMultipartDownload) return null;
             if (_Uri == null) return null;
@@ -163,7 +169,7 @@ namespace UFD
                     }
                 }
                 int remaining = _ExpectedSize - fileSize;
-                if (remaining == 0) return null;
+                if (remaining == 0) return null; // case: no need to download
                 int reqChunkSize = _ChunkSize >= remaining ? remaining : _ChunkSize;
                 if (fileSize + reqChunkSize >= _ExpectedSize) reqChunkSize = remaining; // case: _ChunkSize is smaller than remaining but greater than needed 
                 if (RequestHeaders == null) RequestHeaders = new Dictionary<string, string>();
@@ -191,12 +197,16 @@ namespace UFD
         }
 
 
-
+        /// <summary>
+        /// This function is called when a request ( multi-chunk only) has completed
+        /// </summary>
+        /// <param name="obj"></param>
         internal void _OnCompleteMulti(AsyncOperation obj)
         {
             if (!File.Exists(DownloadResultPath)) return;
                     int fileSize = 0;
                 if (File.Exists(DownloadResultPath)) fileSize = (int) (new FileInfo(DownloadResultPath).Length);
+                OnDownloadChunkedSucces?.Invoke();
                 int remaining = _ExpectedSize - fileSize;
                 int reqChunkSize = _ChunkSize > remaining ? remaining : _ChunkSize;
                     _Progress = reqChunkSize / _ExpectedSize;
@@ -207,7 +217,6 @@ namespace UFD
                         OnDownloadSuccess?.Invoke();
                         _EndTime = DateTime.Now.Millisecond;
                         _CompletedMultipartDownload = true;
-                        Debug.Log("Finished!!!!!! " + _ExpectedSize);
                     } else {
                         // case: not complete!
                         // Download is invoke recursively 

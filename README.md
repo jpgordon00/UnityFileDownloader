@@ -1,4 +1,3 @@
-
 <h1 align="center">UnityFileDownloader☁️</h1>
 <p align="center">
   <a href="https://www.npmjs.com/package/readme-md-generator">
@@ -9,13 +8,12 @@
   </a>
 </p>
 
-
 A file downloader that handles asyncronous and concurrent file downloading, implicit multi-part file downloading, pausing/restarting, and more.
-
 
 ## Appendix
 
 This file downloader was built because UnityWebRequest and recent solutions built by Unity and third-parties are subpar. Please submit any pull-requests that you deem to be a necessary contribution.
+
 ## Features
 
 - Concurrently download any amount of files while adhering to a fixed number of "threads"
@@ -26,6 +24,7 @@ This file downloader was built because UnityWebRequest and recent solutions buil
 - Code structure that allows for modularity of download both fulfillment (such as UnityWebRequest) and dispatching of downloads.
 
 ## Usage/Examples
+
 ```javascript
 using UFD;
 using System;
@@ -43,6 +42,7 @@ public class Example
 
 }
 ```
+
 ```javascript
 using UFD;
 using System;
@@ -66,7 +66,11 @@ public class Example
 
             if (true) { // dummy
                 ufd.Cancel();
-            } 
+            }
+        };
+        // only if multipart is enabled for this uri
+        ufd.OnDownloadChunkedSucces += (uri) {
+            Debug.Log("Progress for " + uri + " is " + ufd.GetProgress(uri));
         };
         ufd.OnDownloadsSuccess += () => {
             Debug.Log("Downloaded all files. (inline func)");
@@ -87,6 +91,6 @@ public class Example
 
 If you have any feedback, please reach out to me at jpgordon00@gmail.com.
 The following features are some of which I deem to be deseriable and not currently implemented:
--  Dynamic chunk sizing based on download speeds
--  Cleanup of class structure to provide complete modularity of download fulfillment and downloader. 
 
+- Dynamic chunk sizing based on download speeds
+- Cleanup of class structure to provide complete modularity of download fulfillment and downloader.

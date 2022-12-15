@@ -58,7 +58,7 @@ namespace UFD
         /// <summary>
         /// Invoked when a file has been downloaded, with param name being the uri
         /// </summary>
-        public event Action<string> OnDownloadSuccess;
+        public event Action<string> OnDownloadSuccess, OnDownloadChunkedSucces;
 
         /// <summary>
         /// Initiates a download from 'Uris'.
@@ -161,6 +161,14 @@ namespace UFD
                     fulfillers.Add(idf);
                     PendingURIS.Add(str);
                     UnityEngine.Debug.Log(fulfillers.Count);
+
+                    /// <summary>
+                    /// Invok action on parent
+                    /// </summary>
+                    /// <returns></returns>
+                    idf.OnDownloadChunkedSucces += () => {
+                        OnDownloadChunkedSucces?.Invoke(idf.Uri);
+                    };
                     
                     /// <summary>
                     /// Handle AbandonOnFailure, updating 'DidError' and dispatching 'OnError', and IncompleteUris

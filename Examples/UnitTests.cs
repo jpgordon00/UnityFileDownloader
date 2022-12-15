@@ -26,9 +26,12 @@ public class UnitTests : MonoBehaviour
             Debug.Log("Downloaded " + uri + "!");
 
             if (true)
-            { // dummy
+            {   // dummy
                 //ufd.Cancel();
             }
+        };
+        ufd.OnDownloadChunkedSucces += (uri) {
+            Debug.Log("Progress for " + uri + " is " + ufd.GetProgress(uri));
         };
         ufd.OnDownloadsSuccess += () => {
             Debug.Log("Downloaded all files. (inline func)");
@@ -37,6 +40,7 @@ public class UnitTests : MonoBehaviour
         {
             Debug.Log($"ErrorCode={errorCode}, EM={errorMsg}, URU={uri}");
         };
+        Debug.Log(ufd.IntitialChunkSize); // amount of bytes used by each chunked https request 
         await ufd.Download();
         Debug.Log("Downloaded all files. (post-awaitable Download invokation)");
         Debug.Log("MB/S = " + ufd.MegabytesDownloadedPerSecond);

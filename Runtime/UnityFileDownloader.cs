@@ -255,13 +255,13 @@ namespace UFD
         {
             if (_PendingUris == null ? true : _PendingUris.Length == 0) return _ReturnFalseAsync();
             string uri = _PendingUris[0];
-            Debug.Log("Dequeing " + uri + ": " + _PendingUris.Length + ", " + _Fulfillers.Length);
             IDownloadFulfiller idf = _Fulfillers[0];
             _PendingUris = _PendingUris.Dequeue();
             _Fulfillers = _Fulfillers.Dequeue();
             _FulfillersOld = _FulfillersOld.Add(new IDownloadFulfiller[]{idf}); // add to old
             if (idf._CompletedMultipartDownload) return _ReturnFalseAsync();
             if (!idf._DidHeadReq && idf.TryMultipartDownload) {
+                // case: didn't do a head request yet and we should, submit one
                 UnityWebRequestAsyncOperation treq = ((UWRFulfiller)idf)._HeadRequest();
                 _N++;
                 treq.completed += (obj) => {
@@ -274,7 +274,7 @@ namespace UFD
                 return _ReturnFalseAsync();
             }
             UnityWebRequestAsyncOperation rv = idf.Download();
-            if (rv == null) {
+            if (rv == null) { // case: either multi-part completed or file is fully downloaded already
                 _DispatchCompletion();
                 return _ReturnFalseAsync();
             }
@@ -286,6 +286,11 @@ namespace UFD
             return _ReturnFalseAsync();
         }
         
+        /// <summary>
+        /// Dispatches a given IDF, for multi-part downloads.
+        /// </summary>
+        /// <param name="idf"></param>
+        /// <returns></returns>
         internal Task<bool> _Dispatch(IDownloadFulfiller idf)
         {
             string uri = idf.Uri;
@@ -367,6 +372,10 @@ namespace UFD
             });
         }
 
+        /// <summary>
+        /// Cancel all takss for this downloader asyncronously.
+        /// </summary>
+        /// <returns></returns>
         public override async Task<bool> Cancel()
         {
             _Downloading = false;
