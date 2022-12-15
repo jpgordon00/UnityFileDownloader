@@ -27,7 +27,7 @@ namespace UFD
         {
             List<string> uris = new List<string>();
             foreach (var str in strings) uris.Add(str);
-            _Uris = uris.ToArray();
+            Uris = uris.ToArray();
         }
 
         internal readonly static SemaphoreLocker _Locker = new SemaphoreLocker();
