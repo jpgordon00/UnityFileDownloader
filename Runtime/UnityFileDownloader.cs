@@ -375,7 +375,7 @@ namespace UFD
         
         public IDownloadFulfiller GetFulfiller(string uri)
         {
-            return _Fulfillers.Where(idf => idf.Uri == uri).ToArray()[0];
+            return _Fulfillers.Where(idf => idf.Uri == uri).ToArray().Length == 0 ? _FulfillersOld.Where(idf => idf.Uri == uri).ToArray()[0] : _Fulfillers.Where(idf => idf.Uri == uri).ToArray()[0];
         }
 
         /// <summary>

@@ -115,7 +115,7 @@ namespace UFD
         /// </summary>
         public bool Completed => Progress == 1.0f;
 
-        public int MultipartChunkSize;
+        public int MultipartChunkSize = 200000;
 
         public abstract string DownloadPath
         {
@@ -130,7 +130,7 @@ namespace UFD
         public float GetProgress(string uri)
         {
             if (!_Uris.ToList().Contains(uri)) return 0f;
-            return _Fulfillers.ToList().Find(idf => idf.Uri == uri).Progress;
+            return _Fulfillers.ToList().Where(idf => idf.Uri == uri).ToArray().Length == 1 ? _Fulfillers.ToList().Find(idf => idf.Uri == uri).Progress : _FulfillersOld.ToList().Find(idf => idf.Uri == uri).Progress;
         }
 
         /// <summary>

@@ -123,7 +123,7 @@ namespace UFD
 
         public int ElapsedTime => Math.Abs(StartTime == 0 ? 0 : (EndTime == 0 ? DateTime.Now.Millisecond - StartTime : EndTime - StartTime));
 
-        public float MegabytesDownloadedPerSecond => (BytesDownloaded / 1000) / (ElapsedTime / 1000);
+        public float MegabytesDownloadedPerSecond => (BytesDownloaded / 1000) / ((ElapsedTime / 1000) == 0 ? 1 : (ElapsedTime / 1000));
 
         /// <summary>
         /// If this fulfiller has `MultipartDownload` set to true, then pause the download.
