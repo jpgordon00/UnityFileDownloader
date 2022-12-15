@@ -27,7 +27,7 @@ public class UnitTests : MonoBehaviour
         ufd.DownloadPath = "C://";
         ufd.TryMultipartDownload = true; // false to disable multipart
         ufd.OnDownloadSuccess += (string uri) => {
-            Debug.Log("Downloaded " + uri + "!");
+            Debug.Log("Downloaded " + uri + "! Total progress is " + ufd.Progress + "%");
             IDownloadFulfiller idf = ufd.GetFulfiller(uri);
             Debug.Log("This download was " + (ufd.MultipartDownload ? "" : "NOT ") + "downloaded in multiparts.");
 
