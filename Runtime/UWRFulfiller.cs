@@ -173,7 +173,6 @@ namespace UFD
                 if (RequestHeaders.ContainsKey("Range")) RequestHeaders.Remove("Range");
                 string str = "";
                 RequestHeaders.Add("Range", str = $"bytes={fileSize}-{fileSize + reqChunkSize}");
-                Debug.Log(str);
                 resp = HTTPHelper.Download(ref uwr, Uri, _DownloadPath, AbandonOnFailure, true, RequestHeaders, _Timeout);
                 resp.completed -= _OnCompleteMulti;
                 resp.completed += _OnCompleteMulti;
