@@ -43,6 +43,9 @@ public class Example
 }
 ```
 
+## Issues
+- Unity Editor termination and application lifecycle methods do not stop this downloader from functioning.
+
 ## TODO
 
 If you have any feedback, please reach out to me at jpgordon00@gmail.com.
