@@ -8,19 +8,19 @@
   </a>
 </p>
 
-A file downloader that handles asyncronous and concurrent file downloading, implicit multi-part file downloading, pausing/restarting, and more.
+A file downloader that handles asyncronous and concurrent file downloading, implicit multi-part file downloading, pausing/restarting, properties with per-file granularity and more.
 
 ## Appendix
 
-This file downloader was built because UnityWebRequest and recent solutions built by Unity and third-parties are subpar and bare of features. While this project is written 100% in C#, this downloader should support all platforms that Unity does.
+This file downloader was built because UnityWebRequest and recent solutions built by Unity and third-parties are subpar and bare of features. While this project is written 100% in C#, this downloader should support all platforms that Unity does. If you have any feedback, please reach out to me at jpgordon00@gmail.com, or submit an issue or pull request. Collaboration is encouraged! 
 
 ## Features
 
-- Concurrently download any amount of files while adhering to a fixed number of "threads"
-- Implicitly handles multi-part file downloading, including pausing/restarting
+- Concurrently download any amount of files while adhering to a fixed number of asyncronous tasks
+- Implicitly handles multi-part file downloading, including pausing/restarting of chunked downloads
 - Provides both task-based asyncronous methods and standard callbacks for errors, individual file completion, all file completion, and more
-- Granularity of properties can be on a per-file basis, providing the ability to pause/restart, and to get/set progress, timeouts, callbacks and more
-- Optional "atomic" file downloading and ability to continue downloading through HTTP/S errors
+- Granularity of properties can be on a per-file basis, providing the ability to pause/restart, and to get/set progress, timeouts, headers, callbacks and more
+- Optionally handle "atomic" file downloading by deleting all downloaded (partially or impartially) files and ability to continue downloading through HTTP/S errors
 - Code structure that allows for modularity of both download fulfillment (such as UnityWebRequest) and dispatching of downloads.
 
 ## Usage/Examples
@@ -47,9 +47,8 @@ public class Example
 - Unity Editor termination and application lifecycle methods do not stop this downloader from functioning.
 
 ## TODO
-
-If you have any feedback, please reach out to me at jpgordon00@gmail.com.
 The following features are some of which I deem to be deseriable and not currently implemented:
 
 - Dynamic chunk sizing based on download speeds
 - Cleanup of class structure to provide complete modularity of download fulfillment and downloader.
+- Provide alternative fulfillers to UnityWebRequest, perhaps unlocking better platform specific performance.
