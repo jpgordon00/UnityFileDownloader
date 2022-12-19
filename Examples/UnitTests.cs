@@ -23,7 +23,7 @@ public class UnitTests : MonoBehaviour
         };
         ufd.AbandonOnFailure = true;
         ufd.ContinueAfterFailure = false;
-        ufd.MaxConcurrency = 3;
+        ufd.MaxConcurrency = 3; // amount of threads to process concurently
         ufd.DownloadPath = "C://";
         Debug.Log($"Downloading chunks of {ufd.MultipartChunkSize} bytes."); 
         ufd.TryMultipartDownload = true; // false to disable multipart
