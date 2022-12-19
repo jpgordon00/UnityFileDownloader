@@ -25,6 +25,7 @@ public class UnitTests : MonoBehaviour
         ufd.ContinueAfterFailure = false;
         ufd.MaxConcurrency = 3;
         ufd.DownloadPath = "C://";
+        Debug.Log($"Downloading chunks of {ufd.MultipartChunkSize} bytes."); 
         ufd.TryMultipartDownload = true; // false to disable multipart
         ufd.OnDownloadSuccess += (string uri) => {
             Debug.Log("Downloaded " + uri + "! Total progress is " + ufd.Progress + "%");
@@ -51,10 +52,8 @@ public class UnitTests : MonoBehaviour
         Debug.Log("MB/S = " + ufd.MegabytesDownloadedPerSecond);
     }
    
- void Start() {
-   Download();
- }
-
-}
+    void Start() {
+       Download();
+    }
 
 }
